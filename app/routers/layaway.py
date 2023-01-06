@@ -19,30 +19,30 @@ class LayawayIn(BaseModel):
 
 
 @router.post("/")
-async def add(
+def add(
     layaway: LayawayIn,
     headers: AuthHeaders = Depends(AuthHeaders),
     service: LayawayService = Depends(LayawayService),
 ):
-    response = await service.create_layaway(layaway.comic_ids, headers)
+    response = service.create_layaway(layaway.comic_ids, headers)
     return JSONResponse(response, status_code=201)
 
 
 @router.patch("/")
-async def update(
+def update(
     layaway: LayawayIn,
     headers: AuthHeaders = Depends(AuthHeaders),
     service: LayawayService = Depends(LayawayService),
 ):
-    response = await service.update_layaway(layaway.comic_ids, headers)
+    response = service.update_layaway(layaway.comic_ids, headers)
     return JSONResponse(response, status_code=200)
 
 
 @router.put("/")
-async def overwrite(
+def overwrite(
     layaway: LayawayIn,
     headers: AuthHeaders = Depends(AuthHeaders),
     service: LayawayService = Depends(LayawayService),
 ):
-    response = await service.overwrite_layaway(layaway.comic_ids, headers)
+    response = service.overwrite_layaway(layaway.comic_ids, headers)
     return JSONResponse(response, status_code=200)

@@ -1,4 +1,4 @@
-import httpx
+import requests
 
 from fastapi import HTTPException
 
@@ -8,12 +8,12 @@ from ...config import settings
 class UsersClient:
     def __init__(self) -> None:
         self.url = f"{settings.env_url}/v1/users"
-        self.client = httpx.AsyncClient(timeout=15.0)
+        self.client = requests
 
-    async def get_logged_user(self, headers):
+    def get_logged_user(self, headers):
         url = self.url + "/me"
         try:
-            response = await self.client.get(url=url, headers=headers)
+            response = self.client.get(url=url, headers=headers)
             if response.status_code == 200:
                 return response.json()
             if response.status_code == 401:
