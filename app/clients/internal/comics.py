@@ -2,10 +2,12 @@ import httpx
 
 from fastapi import HTTPException
 
+from ...config import settings
+
 
 class SearchComicsClient:
     def __init__(self) -> None:
-        self.url = "http://localhost/v1/searchComics"
+        self.url = f"{settings.env_url}/v1/searchComics"
         self.client = httpx.AsyncClient(timeout=10.0)
 
     async def get_comic_by_id(self, comic_id: int):
