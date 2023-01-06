@@ -8,7 +8,7 @@ from ...config import settings
 class UsersClient:
     def __init__(self) -> None:
         self.url = f"{settings.env_url}/v1/users"
-        self.client = httpx.AsyncClient(timeout=10.0)
+        self.client = httpx.AsyncClient(timeout=15.0)
 
     async def get_logged_user(self, headers):
         url = self.url + "/me"

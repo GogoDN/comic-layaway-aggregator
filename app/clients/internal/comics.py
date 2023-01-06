@@ -8,7 +8,7 @@ from ...config import settings
 class SearchComicsClient:
     def __init__(self) -> None:
         self.url = f"{settings.env_url}/v1/searchComics"
-        self.client = httpx.AsyncClient(timeout=10.0)
+        self.client = httpx.AsyncClient(timeout=15.0)
 
     async def get_comic_by_id(self, comic_id: int):
         url = self.url + f"/comics/{comic_id}"
