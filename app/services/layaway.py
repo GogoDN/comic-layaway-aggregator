@@ -36,16 +36,13 @@ class LayawayService:
         return user, comics
 
     def __get_layaway_template(self, user_id):
-        return {"user_id": user_id, "comic_ids": []}
+        return {"user_id": user_id, "comics": []}
 
-    def __add_comics_to_layaway(self, comic_ids: list, layaway: dict):
-        layaway["comic_ids"] = comic_ids
+    def __add_comics_to_layaway(self, comics: list, layaway: dict):
+        layaway["comics"] = comics
 
-    def __get_comic_values_lists(self, comics):
-        comic_ids = [comic.get("id") for comic in comics]
-        comic_titles = [comic.get("title") for comic in comics]
-
-        return comic_ids, comic_titles
+    def __get_comic_titles_list(self, comics):
+        return [comic.get("title") for comic in comics]
 
     async def create_layaway(self, comic_ids: list, headers: AuthHeaders):
         user, comics = await self.__validate_params(comic_ids, headers)
@@ -57,10 +54,10 @@ class LayawayService:
                 "use PATCH to update or PUT to overwrite",
             )
 
-        comic_ids, comic_titles = self.__get_comic_values_lists(comics)
+        comic_titles = self.__get_comic_titles_list(comics)
 
         layaway = self.__get_layaway_template(user.get("id"))
-        self.__add_comics_to_layaway(comic_ids, layaway)
+        self.__add_comics_to_layaway(comics, layaway)
         self.mongo_client.insert_layaway(layaway)
         return {
             "message": "Layaway created",
@@ -69,9 +66,9 @@ class LayawayService:
 
     async def update_layaway(self, comic_ids: list, headers: AuthHeaders):
         user, comics = await self.__validate_params(comic_ids, headers)
-        comic_ids, comic_titles = self.__get_comic_values_lists(comics)
+        comic_titles = self.__get_comic_titles_list(comics)
         layaway = self.mongo_client.find_and_push_by_user_id(
-            user.get("id"), comic_ids
+            user.get("id"), comics
         )
 
         if not layaway:
@@ -84,9 +81,9 @@ class LayawayService:
 
     async def overwrite_layaway(self, comic_ids: list, headers: AuthHeaders):
         user, comics = await self.__validate_params(comic_ids, headers)
-        comic_ids, comic_titles = self.__get_comic_values_lists(comics)
+        comic_titles = self.__get_comic_titles_list(comics)
         layaway = self.mongo_client.find_and_overwrite_by_user_id(
-            user.get("id"), comic_ids
+            user.get("id"), comics
         )
 
         if not layaway:

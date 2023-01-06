@@ -14,17 +14,17 @@ class MongoDbClient:
         db = self.__get_comic_store_db()
         return db.layaways
 
-    def find_and_push_by_user_id(self, user_id, comic_ids):
+    def find_and_push_by_user_id(self, user_id, comics):
         collection = self.__get_layaways_collection()
         return collection.find_one_and_update(
             {"user_id": user_id},
-            {"$push": {"comic_ids": {"$each": comic_ids}}},
+            {"$push": {"comics": {"$each": comics}}},
         )
 
-    def find_and_overwrite_by_user_id(self, user_id, comic_ids):
+    def find_and_overwrite_by_user_id(self, user_id, comics):
         collection = self.__get_layaways_collection()
         return collection.find_one_and_update(
-            {"user_id": user_id}, {"$set": {"comic_ids": comic_ids}}
+            {"user_id": user_id}, {"$set": {"comics": comics}}
         )
 
     def find_one_by_id_user(self, user_id):
